@@ -1,8 +1,10 @@
 def main():
     with open("books/frankenstein.txt") as f:
         file_contents = f.read()
-        print("number of words in  file:", get_word_count(file_contents))
-        print("number of characters:", get_characters_count(file_contents))
+        word_count = get_word_count(file_contents)
+        character_count = get_characters_count(file_contents)
+        report = get_report(word_count, character_count)
+        print(report)
 
 def get_word_count(text):
     words = text.split()
@@ -15,5 +17,26 @@ def get_characters_count(text):
         if c in characters_count:
             characters_count[c] += 1
     return characters_count
+
+def get_report(word_count, character_count):
+    def sort_on(dict):
+        return dict["count"]    
+
+    letter_count_array = []
+    for k in character_count:
+        single_letter_dict = {"letter":k,"count":character_count[k]}
+        letter_count_array.append(single_letter_dict)
+
+    letter_count_array.sort(reverse=True, key=sort_on)
+    # [{'letter': 'e', 'count': 46043}, {'letter': 't', 'count': 30365},...
+
+    report = "--- Begin report of books/frankenstein.txt ---\n"
+    report += f"there are {word_count} words found in the document\n"
+    for i in letter_count_array:
+        character = i["letter"]
+        count = i["count"]
+        report += f"the character '{character}' is found {count} amount of times\n"
+    report += "--- End of report ---"
+    return report
 
 main()
